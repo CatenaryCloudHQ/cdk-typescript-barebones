@@ -1,0 +1,6 @@
+{
+  "app": "npx ts-node --prefer-ts-exts bin/vpc_private_subnet.ts",
+  "context": {
+    "aws-cdk:enableDiffNoFail": "true"
+  }
+}
