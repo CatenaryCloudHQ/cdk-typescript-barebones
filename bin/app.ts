@@ -1,3 +1,6 @@
+#!/usr/bin/env node
+import 'source-map-support/register';
+import { App } from 'aws-cdk-lib';
 import { CfnOutput, Stack, StackProps } from "aws-cdk-lib";
 import { Vpc, SubnetType } from "aws-cdk-lib/aws-ec2";
 import { Construct } from "constructs";
@@ -20,6 +23,11 @@ export class VpcPrivateSubnetStack extends Stack {
           name: "Private",
           subnetType: SubnetType.PRIVATE_WITH_EGRESS,
         },
+        {
+            cidrMask: 24,
+            name: "Isolate",
+            subnetType: SubnetType.PRIVATE_ISOLATED,
+          },
       ],
       natGateways: 1,
     });
@@ -30,12 +38,15 @@ export class VpcPrivateSubnetStack extends Stack {
       description: "The VPC ID",
     });
 
-    // Output Private Subnet IDs
+    // Output Subnet IDs
     vpc.privateSubnets.forEach((subnet, index) => {
-      new CfnOutput(this, `PrivateSubnetId${index}`, {
+      new CfnOutput(this, `SubnetId${index}`, {
         value: subnet.subnetId,
-        description: `The ID of the private subnet ${index}`,
+        description: `The ID of subnet ${index}`,
       });
     });
   }
 }
+
+const app = new App();
+new VpcPrivateSubnetStack(app, 'VpcPrivateSubnetStack');
